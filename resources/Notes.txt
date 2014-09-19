@@ -1,3 +1,19 @@
 Snail sprite:
 
 Top left 3x3 tiles vary between cels
+
+Walking snail layout in tiles, from top to bottom:
+3
+5
+5
+6
+6
+5
+total = 30 tiles
+
+Sleeping snail layout
+4
+4
+5
+5
+total = 18 tiles
