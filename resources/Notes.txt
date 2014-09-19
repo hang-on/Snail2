@@ -1,0 +1,3 @@
+Snail sprite:
+
+Top left 3x3 tiles vary between cels
