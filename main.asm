@@ -23,6 +23,9 @@ banks 2
 .include "lib\bluelib.inc"
 .include "lib\psglib.inc"
 
+.define DSPOFF     %10100000       ; display off
+.define DSPON      %11100000       ; display on
+
 
 .bank 0 slot 0
 .org 0
@@ -65,7 +68,7 @@ start_demo:
              ld    hl, VDP_register_setup
              call  initVDP
              
-             call  clearRam        
+             call  clearRam
 
              call  PSGInit
 

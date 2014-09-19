@@ -88,8 +88,7 @@ SOURCES AND INSPIRATION
 .define SMAPADDR   $3800           ; screen map address (default set.)
 .define NAME_TABLE $3800
 ; for toggling the display: (assuming bluelib std VDP settings)
-.define DSPOFF     %10100001       ; display off
-.define DSPON      %11100001       ; display on
+
 
 
 ; for defining character patterns:
