@@ -93,10 +93,14 @@ debug:
              ld    hl, $2000 | $4000
              call  LoadCommandWord
              ld    hl, snail_tiles
-             ld    bc, xx * 32; amount of tiles
+             ld    bc, 102 * 32; amount of tiles
              call  WriteToVRAM
 
-
+             ld    hl, $0000 | $c010 ; color ram command
+             call  LoadCommandWord
+             ld    hl, snail_palette
+             ld    bc, 7 ; amount of colors
+             call  WriteToVRAM
 
 
              ld     a, DSPON       ; get display constant
