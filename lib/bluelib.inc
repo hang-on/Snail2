@@ -86,7 +86,7 @@ SOURCES AND INSPIRATION
 
 .define SMAPSIZE   768 * 2         ; size of screen map/name table
 .define SMAPADDR   $3800           ; screen map address (default set.)
-.define NAME_TABLE $3800
+.define NAME_TABLE $1800           ; special case here!
 ; for toggling the display: (assuming bluelib std VDP settings)
 
 
@@ -360,7 +360,7 @@ VDPStd:
     .db %10100001                  ; b0 = zoomed sprites!
                                    ; b5 = frame interrupt (enabled)
                                    ; b6 = turn display off
-    .db $FF                        ; name table at $3800
+    .db $F7                        ; name table at $1800
     .db $FF                        ; always $ff
     .db $FF                        ; alwaus $ff
     .db $FF                        ; sprite attrib. table at $3F00
