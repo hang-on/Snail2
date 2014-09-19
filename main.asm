@@ -71,6 +71,26 @@ start_demo:
              call  clearRam
 
              call  PSGInit
+debug:
+             ld    hl, $0000 | $c000 ; color ram command
+             call  LoadCommandWord
+             ld    hl, background_palette
+             ld    bc, 5 ; amount of colors
+             call  WriteToVRAM
+
+             ld    hl, $0000 | $4000
+             call  LoadCommandWord
+             ld    hl, background_tiles
+             ld    bc, 231 * 32; amount of tiles
+             call  WriteToVRAM
+
+             ld    hl, $3800 | $4000
+             call  LoadCommandWord
+             ld    hl, background_tilemap
+             ld    bc, 32*24*2 ; amount of bytes
+             call  WriteToVRAM
+
+
 
              ld     a, DSPON       ; get display constant
              call   toglDSP        ; turn display on using bluelib
@@ -107,6 +127,35 @@ main_loop:
              nop
              
              jp    main_loop
+
+.ends
+
+.section "Misc. functions" free
+; ====================================================================
+; Output
+; --------------------------------------------------------------------
+LoadCommandWord:
+             push  af
+             ld    a, l
+             out   (VDPCOM), a
+             ld    a, h
+             out   (VDPCOM), a
+             pop   af
+             ret
+; ====================================================================
+
+; ====================================================================
+; Write BC amount of bytes from data source pointed to be HL
+; --------------------------------------------------------------------
+WriteToVRAM:
+             ld    a, (hl)
+             out   (VDPDATA), a
+             inc   hl
+             dec   bc
+             ld    a, c
+             or    b
+             jp    nz, WriteToVRAM
+             ret
 
 .ends
 
