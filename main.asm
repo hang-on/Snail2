@@ -62,7 +62,10 @@ banks 2
 
 .section "Start demo" free
 start_demo:
-             call  initBlib
+             ld    hl, VDP_register_setup
+             call  initVDP
+             
+             call  clearRam        
 
              call  PSGInit
 
@@ -72,6 +75,27 @@ start_demo:
              ei                    ; enable interrupts
 
              jp     main_loop      ; jump to main game loop
+             
+; 
+VDP_register_setup:
+    .db %00000110                  ;
+                                   ; b4 = line interrupt (disabled)
+                                   ; b5 = blank left column (disabled)
+                                   ; b6 = dont scroll top two rows (disabled)
+
+    .db %10100000                  ; b0 = zoomed sprites! (disabled)
+                                   ; b5 = frame interrupt (enabled)
+                                   ; b6 = turn display off
+    .db $FF                        ; name table at $3800
+    .db $FF                        ; always $ff
+    .db $FF                        ; alwaus $ff
+    .db $FF                        ; sprite attrib. table at $3F00
+    .db $FB                        ; sprite tiles in first 8K of VRAM
+    .db %11110001                  ; border color (color 1 in bank 2)
+    .db $00                        ; horiz. scroll = 0
+    .db $00                        ; vert. scroll = 0
+    .db $FF                        ; disable line counter
+
 
 .ends
 
