@@ -105,5 +105,7 @@ VDP_register_setup:
 .section "Main loop" free
 main_loop:
              nop
+             
+             jp    main_loop
 
 .ends
