@@ -31,6 +31,8 @@ banks 3
 snail_x db
 snail_y db
 frame_counter dw
+snail_counter db
+snail_state db
 .ends
 
 .bank 0 slot 0
@@ -284,7 +286,8 @@ VDP_register_setup:
 
 .section "Main loop" free
 main_loop:
-             nop
+
+
 
              jp    main_loop
 
@@ -300,6 +303,66 @@ HandleFrameInterrupt:
              ld    (ix + 1), h
              ld    (ix + 0), l
 
+             ld     a, (snail_state)
+             cp     1
+             jp     nz, +
+
+             ld    hl, snail_counter
+             inc   (hl)
+             ld    a, (hl)
+             cp    29
+             call  z, SetWalk1
+             cp    58
+             call  z, SetWalk2
+
+
+
+
+
++:           ld    ix, frame_counter
+             ld    a, (ix + 1)
+             cp    3
+             jp    nz, +
+
+             ld    a, (ix + 0)
+             cp    $e0
+             jp    nz, +
+
+             ld    a, 1
+             ld    (snail_state), a
+
+             ld    a, 168
+             ld    (snail_x), a
+             ld    a, 120
+             ld    (snail_y), a
+
+
+
++:           ret
+
+SetWalk1:
+           ; Put a walking snail on the screen
+             ld   hl, snail_x
+             dec  (hl)
+
+             ld    b, 30 ; amount of tiles in sprite block
+             ld    hl, walking_snail_data_1
+             ld    ix, snail_x ; pointer to master x,y variables
+             call  UpdateSpriteBlock
+             ret
+
+SetWalk2:
+           ; Put a walking snail on the screen
+             ld   hl, snail_x
+             dec  (hl)
+
+
+             ld    b, 30 ; amount of tiles in sprite block
+             ld    hl, walking_snail_data_2
+             ld    ix, snail_x ; pointer to master x,y variables
+             call  UpdateSpriteBlock
+             xor   a
+             ld    (snail_counter), a
              ret
 
 
