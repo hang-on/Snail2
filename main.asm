@@ -107,11 +107,11 @@ start_demo:
              call  WriteToVRAM
 
 
+             ; the sleeping snail start position
              ld    a, 168
              ld    (snail_x), a
              ld    a, 152
              ld    (snail_y), a
-
 
              ; Put a sleeping snail on the screen
              ld    b, 18 ; amount of tiles in sprite block
