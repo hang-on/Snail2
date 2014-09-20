@@ -15,9 +15,9 @@ slot 3 $C000
 ; Map 32 KB of ROM into 2 x 16 KB banks.
 
 .rombankmap
-bankstotal 2
+bankstotal 3
 banksize $4000
-banks 2
+banks 3
 .endro
 
 .include "lib\bluelib.inc"
@@ -39,8 +39,26 @@ frame_counter dw
              di                    ; disable interrupts
              im    1               ; interrupt mode 1
              ld    sp, $dff0       ; stack pointer near end of RAM
-             jp    start_demo
+             jp    init
 .ends
+
+
+.org    $0080 ; Or any other location within $0000-$03FF
+
+.section "init mapper" force
+init:
+         ; This maps the first 48K of ROM to $0000-$BFFF
+         ld      de, $FFFC
+         ld      hl, init_tab
+         ld      bc, $0004
+         ldir
+
+         jp      start_demo
+
+init_tab: ; Table must exist within first 1K of ROM
+         .db     $00, $00, $01, $02
+.ends
+
 
 .orga $0038
 .section "Maskable interrupt handler" force
@@ -78,6 +96,10 @@ start_demo:
              call  clearRam
 
              call  PSGInit
+
+             ld a,:background_palette
+             ld ($ffff),a
+
 
              ld    hl, $0000 | $c000 ; color ram command
              call  LoadCommandWord
@@ -126,6 +148,9 @@ start_demo:
              call   toglDSP        ; turn display on using bluelib
 
              ei                    ; enable interrupts
+
+             ld    hl, snail_tune
+             call  PSGPlay
 
              jp     main_loop      ; jump to main game loop
 
@@ -267,6 +292,7 @@ main_loop:
 
 .section "Misc. functions" free
 HandleFrameInterrupt:
+             ; make a 16-bit frame counter
              ld    ix, frame_counter
              ld    h, (ix + 1)
              ld    l, (ix + 0)
@@ -333,7 +359,13 @@ WriteToVRAM:
 .ends
 
 
-.section "Snail data" free
+.section "PSG data" free
+snail_tune:
+.incbin "snail-comp.psg"
+.ends
+
+.bank 2 slot 2
+.section "Tile data" free
 
 snail_palette:
 .db $37 $02 $03 $00 $3F $0F $0B
@@ -545,10 +577,6 @@ snail_tiles:
 .db $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00
 ; Tile index $065
 .db $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00
-
-.ends
-
-.section "Background data" free
 
 background_palette:
 .db $00 $15 $3F $30 $39
