@@ -26,13 +26,11 @@ banks 2
 .define DSPOFF     %10100000       ; display off
 .define DSPON      %11100000       ; display on
 
-; All variables default to 0, because ram is cleared by bluelib.
+; All variables default to 0, because ram is cleared.
 .ramsection "Variables" slot 3
 snail_x db
 snail_y db
 .ends
-
-
 
 .bank 0 slot 0
 .org 0
@@ -63,10 +61,9 @@ snail_y db
              reti                  ; return from interrupt
 .ends
 
-
-
 .orga $0066
 .section "Non-Maskable interrupt handler (pause)" force
+
              retn                  ; disable pause button
 .ends
 
@@ -88,7 +85,7 @@ start_demo:
              ld    hl, $2000 | $4000
              call  LoadCommandWord
              ld    hl, background_tiles
-             ld    bc, 231 * 32; amount of tiles
+             ld    bc, 232 * 32; amount of tiles
              call  WriteToVRAM
 
              ld    hl, NAME_TABLE | $4000
@@ -118,11 +115,9 @@ start_demo:
 
              ; Put a sleeping snail on the screen
              ld    b, 18 ; amount of tiles in sprite block
-             ld    hl, sprite_block_data
+             ld    hl, sleeping_snail_data
              ld    ix, snail_x ; pointer to master x,y variables
              call  UpdateSpriteBlock
-
-
 
              ld     a, DSPON       ; get display constant
              call   toglDSP        ; turn display on using bluelib
@@ -136,7 +131,7 @@ start_demo:
 ; format cc xx yy
 ; cc = charcode, xx = x offset, yy = y offset
 
-sprite_block_data:
+sleeping_snail_data:
 .db 31 8 0
 .db 32 16 0
 .db 33 24 0
@@ -159,8 +154,6 @@ sprite_block_data:
 .db 84 24 24
 .db 85 32 24
 
-
-;
 VDP_register_setup:
     .db %00000110                  ;
                                    ; b4 = line interrupt (disabled)
@@ -179,7 +172,6 @@ VDP_register_setup:
     .db $00                        ; horiz. scroll = 0
     .db $00                        ; vert. scroll = 0
     .db $FF                        ; disable line counter
-
 
 .ends
 
@@ -253,7 +245,7 @@ snail_palette:
 .db $37 $02 $03 $00 $3F $0F $0B
 
 snail_tiles:
-; Extra blank tile
+; Extra blank tile (NOTE: This tile is not in the PSP tilesheet)
 .db $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00
 ; Tile index $000
 .db $00 $00 $00 $00 $1E $1E $00 $00 $27 $39 $1E $00 $67 $79 $1E $00 $80 $FF $7F $00 $80 $FF $7F $00 $98 $98 $67 $00 $98 $98 $67 $00
