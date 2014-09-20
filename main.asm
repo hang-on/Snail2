@@ -213,7 +213,35 @@ debug:
 
              jp     main_loop      ; jump to main game loop
              
-; 
+
+; Sprite block data
+; format cc xx yy
+; cc = charcode, xx = x offset, yy = y offset
+
+.db 30 8 0
+.db 31 16 0
+.db 32 24 0
+.db 33 32 0
+
+.db 47 8 8
+.db 48 16 8
+.db 49 24 8
+.db 50 32 8
+
+.db 63 0 16
+.db 64 8 16
+.db 65 16 16
+.db 66 24 16
+.db 67 32 16
+
+.db 80 0 24
+.db 81 8 24
+.db 82 16 24
+.db 83 24 24
+.db 84 32 24
+
+.db 0 0 $d0
+;
 VDP_register_setup:
     .db %00000110                  ;
                                    ; b4 = line interrupt (disabled)
