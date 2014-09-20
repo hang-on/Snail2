@@ -30,6 +30,7 @@ banks 2
 .ramsection "Variables" slot 3
 snail_x db
 snail_y db
+frame_counter dw
 .ends
 
 .bank 0 slot 0
@@ -52,6 +53,8 @@ snail_y db
              call  hdlFrame        ; bluelib frame handler
              call  PSGFrame        ; psglib housekeeping
              call  PSGSFXFrame     ; process next SFX frame
+
+             call  HandleFrameInterrupt
 
              exx                   ; restore the registers
              ex    af, af'         ; also restore AF
@@ -263,6 +266,18 @@ main_loop:
 .ends
 
 .section "Misc. functions" free
+HandleFrameInterrupt:
+             ld    ix, frame_counter
+             ld    h, (ix + 1)
+             ld    l, (ix + 0)
+             inc   hl
+             ld    (ix + 1), h
+             ld    (ix + 0), l
+
+             ret
+
+
+
 UpdateSpriteBlock:
 -:           ld    a, (hl)
              ld    c, a
