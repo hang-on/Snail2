@@ -26,6 +26,13 @@ banks 2
 .define DSPOFF     %10100000       ; display off
 .define DSPON      %11100000       ; display on
 
+; All variables default to 0, because ram is cleared by bluelib.
+.ramsection "Variables" slot 3
+snail_x db
+snail_y db
+.ends
+
+
 
 .bank 0 slot 0
 .org 0
@@ -71,7 +78,7 @@ start_demo:
              call  clearRam
 
              call  PSGInit
-debug:
+
              ld    hl, $0000 | $c000 ; color ram command
              call  LoadCommandWord
              ld    hl, background_palette
@@ -102,8 +109,17 @@ debug:
              ld    bc, 7 ; amount of colors
              call  WriteToVRAM
 
+
+             ld    a, 168
+             ld    (snail_x), a
+             ld    a, 152
+             ld    (snail_y), a
+
+
+
              ld    b, 18
              ld    hl, sprite_block_data
+             ld    ix, snail_x
 
 -:
              ld    a, (hl)
@@ -111,12 +127,12 @@ debug:
 
              inc   hl
              ld    a, (hl)
-             add   a, 8 ; master x pos
+             add   a, (ix + 0) ; master x pos
              ld    d, a
 
              inc   hl
              ld    a, (hl)
-             add   a, 8 ; master y pos
+             add   a, (ix + 1) ; master y pos
              ld    e, a
 
              inc   hl
@@ -128,10 +144,6 @@ debug:
              pop   hl
              djnz  -
 
-             ld    b, 19
-             ld    c, 1
-             ld    de, $1010
-             call  goSprite
 
 
 
