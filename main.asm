@@ -115,7 +115,7 @@ start_demo:
 
              ; Put a sleeping snail on the screen
              ld    b, 30 ; amount of tiles in sprite block
-             ld    hl, walking_snail_data_1
+             ld    hl, walking_snail_data_2
              ld    ix, snail_x ; pointer to master x,y variables
              call  UpdateSpriteBlock
 
@@ -168,6 +168,43 @@ walking_snail_data_1:
 .db 35 0 16
 .db 36 8 16
 .db 37 16 16
+.db 38 24 16
+.db 39 32 16
+
+.db 52 0 24
+.db 53 8 24
+.db 54 16 24
+.db 55 24 24
+.db 56 32 24
+.db 57 40 24
+
+.db 69 0 32
+.db 70 8 32
+.db 71 16 32
+.db 72 24 32
+.db 73 32 32
+.db 74 40 32
+
+.db 86 0 40
+.db 87 8 40
+.db 88 16 40
+.db 89 24 40
+.db 90 32 40
+
+walking_snail_data_2:
+.db 7 0 0
+.db 8 8 0
+.db 9 16 0
+
+.db 24 0 8
+.db 25 8 8
+.db 26 16 8
+.db 21 24 8
+.db 22 32 8
+
+.db 41 0 16
+.db 42 8 16
+.db 43 16 16
 .db 38 24 16
 .db 39 32 16
 
