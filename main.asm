@@ -110,12 +110,12 @@ start_demo:
              ; the sleeping snail start position
              ld    a, 168
              ld    (snail_x), a
-             ld    a, 152
+             ld    a, 132
              ld    (snail_y), a
 
              ; Put a sleeping snail on the screen
-             ld    b, 18 ; amount of tiles in sprite block
-             ld    hl, sleeping_snail_data
+             ld    b, 30 ; amount of tiles in sprite block
+             ld    hl, walking_snail_data_1
              ld    ix, snail_x ; pointer to master x,y variables
              call  UpdateSpriteBlock
 
@@ -153,6 +153,46 @@ sleeping_snail_data:
 .db 83 16 24
 .db 84 24 24
 .db 85 32 24
+
+walking_snail_data_1:
+.db 1 0 0
+.db 2 8 0
+.db 3 16 0
+
+.db 18 0 8
+.db 19 8 8
+.db 20 16 8
+.db 21 24 8
+.db 22 32 8
+
+.db 35 0 16
+.db 36 8 16
+.db 37 16 16
+.db 38 24 16
+.db 39 32 16
+
+.db 52 0 24
+.db 53 8 24
+.db 54 16 24
+.db 55 24 24
+.db 56 32 24
+.db 57 40 24
+
+.db 69 0 32
+.db 70 8 32
+.db 71 16 32
+.db 72 24 32
+.db 73 32 32
+.db 74 40 32
+
+.db 86 0 40
+.db 87 8 40
+.db 88 16 40
+.db 89 24 40
+.db 90 32 40
+
+
+
 
 VDP_register_setup:
     .db %00000110                  ;
