@@ -116,148 +116,21 @@ start_demo:
              ld    (snail_y), a
 
 
-
-             ld    b, 18
+             ; Put a sleeping snail on the screen
+             ld    b, 18 ; amount of tiles in sprite block
              ld    hl, sprite_block_data
-             ld    ix, snail_x
-
--:
-             ld    a, (hl)
-             ld    c, a
-
-             inc   hl
-             ld    a, (hl)
-             add   a, (ix + 0) ; master x pos
-             ld    d, a
-
-             inc   hl
-             ld    a, (hl)
-             add   a, (ix + 1) ; master y pos
-             ld    e, a
-
-             inc   hl
-
-             push  hl
-             push  bc
-             call  goSprite
-             pop   bc
-             pop   hl
-             djnz  -
+             ld    ix, snail_x ; pointer to master x,y variables
+             call  UpdateSpriteBlock
 
 
 
-
-/*
-             ; draw sleeping snail
-             ; starts at tile 29
-
-             ld    b, 0
-             ld    c, 30
-             ld    de, $0800
-             call  goSprite
-
-             ld    b, 1
-             ld    c, 31
-             ld    de, $1000
-             call  goSprite
-
-             ld    b, 2
-             ld    c, 32
-             ld    de, $1800
-             call  goSprite
-
-             ld    b, 3
-             ld    c, 33
-             ld    de, $2000
-             call  goSprite
-
-
-             ld    b, 4
-             ld    c, 47
-             ld    de, $0808
-             call  goSprite
-
-             ld    b, 5
-             ld    c, 48
-             ld    de, $1008
-             call  goSprite
-
-             ld    b, 6
-             ld    c, 49
-             ld    de, $1808
-             call  goSprite
-
-             ld    b, 7
-             ld    c, 50
-             ld    de, $2008
-             call  goSprite
-
-
-             ld    b, 8
-             ld    c, 63
-             ld    de, $0010
-             call  goSprite
-
-             ld    b, 9
-             ld    c, 64
-             ld    de, $0810
-             call  goSprite
-
-             ld    b, 10
-             ld    c, 65
-             ld    de, $1010
-             call  goSprite
-
-             ld    b, 11
-             ld    c, 66
-             ld    de, $1810
-             call  goSprite
-
-             ld    b, 12
-             ld    c, 67
-             ld    de, $2010
-             call  goSprite
-
-
-             ld    b, 13
-             ld    c, 80
-             ld    de, $0018
-             call  goSprite
-
-             ld    b, 14
-             ld    c, 81
-             ld    de, $0818
-             call  goSprite
-
-             ld    b, 15
-             ld    c, 82
-             ld    de, $1018
-             call  goSprite
-
-             ld    b, 16
-             ld    c, 83
-             ld    de, $1818
-             call  goSprite
-
-             ld    b, 17
-             ld    c, 84
-             ld    de, $2018
-             call  goSprite
-
-
-             ; stop rendering sprites
-             ld    b, 18
-             ld    c, $00
-             ld    de, $00d0
-             call  goSprite
-*/
              ld     a, DSPON       ; get display constant
              call   toglDSP        ; turn display on using bluelib
 
              ei                    ; enable interrupts
 
              jp     main_loop      ; jump to main game loop
-             
+
 
 ; Sprite block data
 ; format cc xx yy
@@ -313,12 +186,38 @@ VDP_register_setup:
 .section "Main loop" free
 main_loop:
              nop
-             
+
              jp    main_loop
 
 .ends
 
 .section "Misc. functions" free
+UpdateSpriteBlock:
+-:           ld    a, (hl)
+             ld    c, a
+
+             inc   hl
+             ld    a, (hl)
+             add   a, (ix + 0) ; master x pos
+             ld    d, a
+
+             inc   hl
+             ld    a, (hl)
+             add   a, (ix + 1) ; master y pos
+             ld    e, a
+
+             inc   hl
+
+             push  hl
+             push  bc
+             call  goSprite
+             pop   bc
+             pop   hl
+             djnz  -
+
+             ret
+
+
 ; ====================================================================
 ; Output
 ; --------------------------------------------------------------------
