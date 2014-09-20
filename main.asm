@@ -102,7 +102,35 @@ debug:
              ld    bc, 7 ; amount of colors
              call  WriteToVRAM
 
+             ld    b, 18
+             ld    hl, sprite_block_data
 
+-:
+             ld    a, (hl)
+             ld    c, a
+
+             inc   hl
+             ld    a, (hl)
+             add   a, 8 ; master x pos
+             ld    d, a
+
+             inc   hl
+             ld    a, (hl)
+             add   a, 8 ; master y pos
+             ld    e, a
+
+             inc   hl
+
+             push  hl
+             push  bc
+             call  goSprite
+             pop   bc
+             pop   hl
+             djnz  -
+
+
+
+/*
              ; draw sleeping snail
              ; starts at tile 29
 
@@ -205,7 +233,7 @@ debug:
              ld    c, $00
              ld    de, $00d0
              call  goSprite
-
+*/
              ld     a, DSPON       ; get display constant
              call   toglDSP        ; turn display on using bluelib
 
@@ -218,6 +246,7 @@ debug:
 ; format cc xx yy
 ; cc = charcode, xx = x offset, yy = y offset
 
+sprite_block_data:
 .db 30 8 0
 .db 31 16 0
 .db 32 24 0
@@ -240,7 +269,7 @@ debug:
 .db 83 24 24
 .db 84 32 24
 
-.db 0 0 $d0
+
 ;
 VDP_register_setup:
     .db %00000110                  ;
