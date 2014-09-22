@@ -1,23 +1,25 @@
 ; Snail2 (c) 2014, [hang-on]
+; This code is a mess. Sorry. Contact me on the forum, and I'll 
+; work out a more nice and tidy version on request :)
 
-; Create 3 x 16 KB slots for ROM and 1 x 8 KB slot for RAM.
-
-.memorymap
-defaultslot 2
-slotsize $4000
+            ; 48 kb = no mapping
+.memorymap  ; trying to have one big slot
+defaultslot 0
+slotsize $BFFD ; almost 48 kb (49149 bytes)
 slot 0 $0000
-slot 1 $4000
-slot 2 $8000
+slotsize $1    ; must have these two micro slots so that the slot
+slot 1 $BFFE   ; for ram will still be slot 3 (as assumed by
+slot 2 $BFFF   ; libraries included)
 slotsize $2000
 slot 3 $C000
 .endme
 
-; Map 32 KB of ROM into 2 x 16 KB banks.
+; Map: one big bank to fit into slot 0!
 
 .rombankmap
-bankstotal 3
-banksize $4000
-banks 3
+bankstotal 1
+banksize $BFFD
+banks 1
 .endro
 
 .include "lib\bluelib.inc"
@@ -427,7 +429,6 @@ snail_tune:
 .incbin "snail-comp.psg"
 .ends
 
-.bank 2 slot 2
 .section "Tile data" free
 
 snail_palette:
