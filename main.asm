@@ -22,7 +22,7 @@ banksize $BFFD
 banks 1
 .endro
 
-.include "lib\bluelib.inc"
+.include "..\bluelib\bluelib.inc"
 .include "lib\psglib.inc"
 
 .define DSPOFF     %10100000       ; display off
@@ -358,7 +358,6 @@ SetWalk2:
              ld   hl, snail_x
              dec  (hl)
 
-
              ld    b, 30 ; amount of tiles in sprite block
              ld    hl, walking_snail_data_2
              ld    ix, snail_x ; pointer to master x,y variables
@@ -367,32 +366,6 @@ SetWalk2:
              ld    (snail_counter), a
              ret
 
-
-
-UpdateSpriteBlock:
--:           ld    a, (hl)
-             ld    c, a
-
-             inc   hl
-             ld    a, (hl)
-             add   a, (ix + 0) ; master x pos
-             ld    d, a
-
-             inc   hl
-             ld    a, (hl)
-             add   a, (ix + 1) ; master y pos
-             ld    e, a
-
-             inc   hl
-
-             push  hl
-             push  bc
-             call  goSprite
-             pop   bc
-             pop   hl
-             djnz  -
-
-             ret
 
 
 ; ====================================================================
