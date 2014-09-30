@@ -2,12 +2,13 @@
 ; This code is a mess. Sorry. Contact me on the forum, and I'll 
 ; work out a more nice and tidy version on request :)
 
-; NOTE: NTSC-version!
+; NTSC-version
+
 
             ; 48 kb = no mapping
 .memorymap  ; trying to have one big slot
 defaultslot 0
-slotsize $BFFD ; almost 48 kb (49149 bytes) - including the header at $7FE0-$7FEF
+slotsize $BFFD ; almost 48 kb (49149 bytes)
 slot 0 $0000
 slotsize $1    ; must have these two micro slots so that the slot
 slot 1 $BFFE   ; for ram will still be slot 3 (as assumed by
@@ -24,21 +25,7 @@ banksize $BFFD
 banks 1
 .endro
 
-/*
-
-.SDSCTAG 1.0, "DUNGEON MAN", "A wild dungeon exploration game", "Ville Helin"
-
-.SDSCTAG adds SDSC tag to your SMS/GG ROM file. The ROM size must be at least
-32KB just like with .COMPUTESMSCHECKSUM and .SMSTAG, as the data goes into
-$7FE0-$7FEF of the ROM. For more information about this header take a look
-at http://www.smspower.org/dev/sdsc/. Here's an explanation of the arguments:
-
-.SDSCTAG {version number}, {program name}, {program release notes}, {program author}
-*/
-
-.sdsctag 1.02, "Snail II", "Beyond the maze", "[hang-on]"
-
-.include "..\bluelib\bluelib.inc"
+.include "lib\bluelib.inc"
 .include "lib\psglib.inc"
 
 .define DSPOFF     %10100000       ; display off
@@ -52,6 +39,9 @@ frame_counter dw
 snail_counter db
 snail_state db
 .ends
+
+.SDSCTAG 1.2, "Snail II", "Beyond the maze (NTSC)", "[hang-on]"
+
 
 .bank 0 slot 0
 .org 0
@@ -374,6 +364,7 @@ SetWalk2:
              ld   hl, snail_x
              dec  (hl)
 
+
              ld    b, 30 ; amount of tiles in sprite block
              ld    hl, walking_snail_data_2
              ld    ix, snail_x ; pointer to master x,y variables
@@ -382,6 +373,32 @@ SetWalk2:
              ld    (snail_counter), a
              ret
 
+
+
+UpdateSpriteBlock:
+-:           ld    a, (hl)
+             ld    c, a
+
+             inc   hl
+             ld    a, (hl)
+             add   a, (ix + 0) ; master x pos
+             ld    d, a
+
+             inc   hl
+             ld    a, (hl)
+             add   a, (ix + 1) ; master y pos
+             ld    e, a
+
+             inc   hl
+
+             push  hl
+             push  bc
+             call  goSprite
+             pop   bc
+             pop   hl
+             djnz  -
+
+             ret
 
 
 ; ====================================================================
@@ -415,7 +432,7 @@ WriteToVRAM:
 
 .section "PSG data" free
 snail_tune:
-.incbin "snail-comp.psg"
+.incbin "snail-1-1-NTSC.psg"
 .ends
 
 .section "Tile data" free
